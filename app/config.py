@@ -33,7 +33,7 @@ class Settings(BaseSettings):
     environment: str = os.getenv("ENVIRONMENT", "production")
     
     # Render specific
-    port: int = int(os.getenv("PORT", "8000"))
+    port: int = int(os.getenv("PORT", "10000"))
     
     class Config:
         env_file = ".env"
