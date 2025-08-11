@@ -1,0 +1,14 @@
+# Render.com deployment configuration
+build: 
+  - pip install -r requirements.txt
+
+start: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+
+# Environment variables required:
+# DATABASE_URL - PostgreSQL connection string (automatically provided by Render)
+# REDIS_URL - Redis connection string (optional, for advanced rate limiting)
+# MASTER_SECRET - Your master secret for key derivation (generate securely)
+# API_KEY - API key for authentication (generate securely)
+# JWT_SECRET - JWT secret (optional, for future auth enhancements)
+# ENVIRONMENT - production
+# DEBUG - false
