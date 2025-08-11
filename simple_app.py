@@ -1,6 +1,4 @@
-# Simple OTP Service without complex dependencies
-# This version should deploy reliably on Render.com
-
+# Change the import to work with uvicorn command
 from fastapi import FastAPI, HTTPException, Depends, Request, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, Field
@@ -10,20 +8,18 @@ import struct
 import time
 import base64
 import os
-import sqlite3
 from datetime import datetime
 from typing import Optional, Dict, Any
-import json
 
-# Simple configuration
+# Configuration
 API_KEY = os.getenv("API_KEY", "UkFPS1EXdV8SmopIby5TvY2kCTsu228c")
 MASTER_SECRET = os.getenv("MASTER_SECRET", "cxxH4qNRyLeePT49yRJev1kRdF1Cu0jA1e8FA2sGQZw")
-PORT = int(os.getenv("PORT", "10000"))
 
+# Create FastAPI app
 app = FastAPI(title="Simple OTP Service", version="1.0.0")
 security = HTTPBearer()
 
-# Simple in-memory storage for demo (use database in production)
+# Simple in-memory storage
 devices_db = {}
 audit_logs = []
 
@@ -207,6 +203,5 @@ async def list_devices(credentials: HTTPAuthorizationCredentials = Depends(verif
     """List all devices (debug only)"""
     return {"devices": devices_db, "audit_logs": audit_logs[-10:]}  # Last 10 logs
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=PORT)
+# Remove the main section since uvicorn will run the app directly
+# App is ready to be run with: uvicorn simple_app:app --host 0.0.0.0 --port $PORT

@@ -1,26 +1,24 @@
-# Simple single-stage Dockerfile for Render.com
+# Minimal Dockerfile for Render.com
 FROM python:3.11-slim
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    libpq5 \
-    gcc \
-    libpq-dev \
-    && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
 
-# Copy requirements and install dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copy application code
-COPY app/ ./app/
-COPY migrations/ ./migrations/
+# Copy requirements first for better caching
+COPY requirements_simple.txt .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements_simple.txt
+
+# Copy application
+COPY simple_app.py .
 
 # Expose port
 EXPOSE $PORT
 
-# Start application
-CMD uvicorn app.main:app --host 0.0.0.0 --port $PORT
+# Run the application
+CMD uvicorn simple_app:app --host 0.0.0.0 --port $PORT
